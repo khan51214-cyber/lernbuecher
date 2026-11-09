@@ -39,13 +39,10 @@
         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-navy text-white text-xl font-bold">L</span>
         <span class="font-display text-2xl font-semibold text-slate-900">LernBücher</span>
       </a>
-      <div class="flex items-center gap-3">
+      <!-- Navigation actions container -->
+      <div id="nav-actions" class="flex items-center gap-3">
         <a href="#featured" class="text-sm text-slate-600 hover:text-tealdeep hidden sm:block">Catalog</a>
         <a href="#how-it-works" class="text-sm text-slate-600 hover:text-tealdeep hidden sm:block">How it works</a>
-        <!-- Admin Login Button Added Here Without Breaking Design -->
-        <button onclick="toggleAdminPanel()" class="rounded-full bg-slate-900 text-white px-4 py-2 text-xs font-semibold hover:bg-slate-800 transition">
-          ⚙️ Admin Login
-        </button>
       </div>
     </nav>
   </header>
@@ -179,7 +176,7 @@
       <div id="category-cards" class="mt-10 grid gap-6 md:grid-cols-3"></div>
     </section>
 
-    <!-- FEATURED BOOKS SECTION (Dynamic Grid Connected to Dashboard) -->
+    <!-- FEATURED BOOKS SECTION -->
     <section id="featured" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16" aria-labelledby="featured-heading">
       <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
         <div>
@@ -251,8 +248,33 @@
   <script src="js/books.js"></script>
   <script src="js/app.js"></script>
 
-  <!-- Admin Dashboard Logic Script with 10 Books per Category -->
+  <!-- Admin Login & Dashboard Logic -->
   <script>
+    function createAdminButton() {
+      if (!document.getElementById('adminBtn')) {
+        const navActions = document.getElementById('nav-actions');
+        const btn = document.createElement('button');
+        btn.id = 'adminBtn';
+        btn.onclick = toggleAdminPanel;
+        btn.className = 'rounded-full bg-slate-900 text-white px-4 py-2 text-xs font-semibold hover:bg-slate-800 transition';
+        btn.innerHTML = '⚙️ Admin Login';
+        navActions.appendChild(btn);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('admin') === 'true') {
+        let pwd = prompt("Enter Admin Password:");
+        if (pwd === 'admin123') {
+          sessionStorage.setItem('isAdmin', 'true');
+          createAdminButton();
+        }
+      } else if (sessionStorage.getItem('isAdmin') === 'true') {
+        createAdminButton();
+      }
+    });
+
     const defaultBooks = {
       deutsche: [
         { id: 101, title: "Stadtgespräche B1", level: "B1", cover: "https://via.placeholder.com/200x300.png?text=Stadtgespraeche+B1", desc: "Everyday German course book for advanced learners, focusing on conversational skills.", link: "#" },
@@ -342,6 +364,7 @@
       const pwd = document.getElementById('admin-pwd-input').value;
       if (pwd === 'admin123') {
         sessionStorage.setItem('isAdmin', 'true');
+        createAdminButton();
         showAdminForm();
       } else {
         document.getElementById('pwd-error').classList.remove('hidden');
