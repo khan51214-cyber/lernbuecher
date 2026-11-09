@@ -154,14 +154,8 @@
                 class="w-full rounded-full border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-teal-600 focus:bg-white focus:outline-none focus:ring-4 focus:ring-teal-600/10" />
               <div id="search-panel" class="search-panel absolute left-0 right-0 top-[calc(100%+8px)] hidden overflow-hidden rounded-2xl border border-slate-200 bg-white" role="listbox"></div>
             </form>
-
-            <nav class="hidden lg:flex items-center gap-5" aria-label="Main">${navLinks()}</nav>
-
-            <button id="menu-btn" class="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </button>
           </div>
-          <nav id="mobile-nav" class="mobile-nav lg:hidden pb-3 flex flex-col gap-2" hidden aria-label="Mobile">${navLinks()}</nav>
+          <nav class="flex items-center justify-center gap-4 sm:gap-8 pb-3 overflow-x-auto text-sm" aria-label="Main">${navLinks()}</nav>
         </div>
       </header>
     `;
@@ -261,17 +255,7 @@
     });
   }
 
-  function bindMobileNav() {
-    const btn = document.getElementById("menu-btn");
-    const nav = document.getElementById("mobile-nav");
-    if (!btn || !nav) return;
-    btn.addEventListener("click", function () {
-      const open = nav.hasAttribute("hidden");
-      if (open) nav.removeAttribute("hidden");
-      else nav.setAttribute("hidden", "");
-      btn.setAttribute("aria-expanded", String(open));
-    });
-  }
+  function bindMobileNav() {}
 
   function bindHeroSearch() {
     const hero = document.getElementById("hero-search");
@@ -339,7 +323,7 @@
 
   function renderCategoryPage() {
     const list = BOOKS.filter((b) => b.category === config.category);
-    renderBookGrid(document.getElementById("book-grid"), list, "No books in this category yet.", "h1");
+    renderBookGrid(document.getElementById("book-grid"), list, "No books in this category yet.", "h2");
     const hash = window.location.hash.replace("#", "");
     if (hash) {
       const node = document.querySelector('[data-book-id="' + hash + '"]');

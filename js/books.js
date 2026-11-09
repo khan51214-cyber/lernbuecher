@@ -14,6 +14,10 @@
  *  tags        Extra search keywords
  *  downloadUrl Replace "#" with your hosted PDF path, e.g. "/files/a1-start.pdf"
  *  cover       Gradient stops + optional kicker printed on the generated cover
+ *  coverImage  Optional http(s) or site-relative URL for a real cover photo
+ *
+ * The live catalog is managed in js/catalog.js (localStorage + Admin panel).
+ * This file is the starter/sample seed.
  */
 window.BOOKS = [
   {
