@@ -258,7 +258,7 @@
       </div>
     </section>
 
-    <!-- How it works + Autoplay Classroom & Library Video -->
+    <!-- How it works + Working Autoplay Video -->
     <section id="how-it-works" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20" aria-labelledby="how-heading">
       <div class="grid gap-10 lg:grid-cols-2 items-center rounded-3xl bg-white border border-slate-200 p-6 sm:p-10">
         <div>
@@ -279,21 +279,22 @@
             </li>
           </ol>
         </div>
-        <!-- Self-Hosted Autoplay Classroom & Library Video -->
-        <div class="relative overflow-hidden rounded-2xl bg-slate-900 aspect-video shadow-xl">
+        <!-- Working Self-Hosted Autoplay Video -->
+        <div class="relative overflow-hidden rounded-2xl bg-slate-900 aspect-video shadow-xl flex items-center justify-center">
           <video 
             class="absolute inset-0 h-full w-full object-cover"
             autoplay 
             muted 
             loop 
             playsinline
-            preload="auto"
-            title="German Institute Classroom and Library Tour"
+            poster="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80"
           >
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-students-working-in-a-library-42998-large.responsive.html" type="video/mp4">
-            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
-            Aap ka browser video tag ko support nahi karta.
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4">
+            Your browser does not support the video tag.
           </video>
+          <div class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-lg text-white text-xs font-medium flex items-center gap-1.5">
+            <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span> German Institute Library
+          </div>
         </div>
       </div>
     </section>
@@ -505,4 +506,4 @@
     renderBooks();
   </script>
 </body>
-</html> 
+</html>
