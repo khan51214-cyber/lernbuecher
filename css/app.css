@@ -1,0 +1,151 @@
+/* ============================================================
+   LernBücher — custom styles that complement Tailwind CDN
+   Keep this file small. Layout/spacing lives in HTML classes.
+   ============================================================ */
+
+:root {
+  --ink: #0a2a32;
+  --teal: #0e7c7b;
+  --teal-deep: #095c5b;
+  --navy: #073b4c;
+  --gold: #e8b931;
+  --gold-hover: #f3c94a;
+  --paper: #f5f7f8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Outfit", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.font-display {
+  font-family: "Fraunces", Georgia, serif;
+}
+
+/* Subtle paper grain so the long-scroll page feels tactile, not flat */
+.page-grain {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(14, 124, 123, 0.08), transparent),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(7, 59, 76, 0.06), transparent);
+}
+
+/* Navbar live-search panel */
+.search-panel {
+  box-shadow: 0 24px 60px -20px rgba(7, 59, 76, 0.35);
+}
+
+/* Book cover “object” — no external image host required */
+.cover {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  box-shadow:
+    0 18px 40px -18px rgba(7, 59, 76, 0.45),
+    inset 6px 0 0 rgba(255, 255, 255, 0.12);
+}
+
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0, transparent 12%);
+  pointer-events: none;
+}
+
+.cover-spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.35), transparent);
+}
+
+/* Download CTA */
+.btn-download {
+  background: linear-gradient(180deg, var(--gold-hover) 0%, var(--gold) 100%);
+  color: #1a1403;
+  box-shadow: 0 8px 20px -10px rgba(232, 185, 49, 0.9);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn-download:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 14px 28px -12px rgba(232, 185, 49, 1);
+}
+
+.btn-download:active {
+  transform: translateY(0);
+}
+
+/* Category cards */
+.cat-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 50px -24px rgba(7, 59, 76, 0.45);
+}
+
+/* Hero mesh */
+.hero-mesh {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(20, 184, 166, 0.28), transparent 36%),
+    radial-gradient(circle at 85% 10%, rgba(232, 185, 49, 0.18), transparent 32%),
+    radial-gradient(circle at 70% 90%, rgba(14, 124, 123, 0.35), transparent 40%),
+    linear-gradient(135deg, #052831 0%, #073b4c 42%, #0e5c5b 100%);
+}
+
+/* Level badges */
+.badge-a1 { background: #d1fae5; color: #065f46; }
+.badge-a2 { background: #ccfbf1; color: #115e59; }
+.badge-b1 { background: #e0f2fe; color: #075985; }
+.badge-b2 { background: #dbeafe; color: #1e3a8a; }
+.badge-c1 { background: #ede9fe; color: #5b21b6; }
+.badge-c2 { background: #fae8ff; color: #86198f; }
+
+/* Legal pages */
+.prose-legal h2 {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--navy);
+}
+
+.prose-legal p,
+.prose-legal li {
+  color: #334155;
+  line-height: 1.75;
+}
+
+.prose-legal ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.prose-legal a {
+  color: var(--teal-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Focus for accessibility */
+:focus-visible {
+  outline: 2px solid #14b8a6;
+  outline-offset: 3px;
+}
+
+/* Mobile nav */
+.mobile-nav[hidden] {
+  display: none;
+}

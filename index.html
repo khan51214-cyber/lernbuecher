@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LernBücher — Free German Learning Books &amp; Resources</title>
+  <meta name="description" content="Download free German learning books and PDFs for German, Russian, and Albanian speakers. CEFR levels A1 to C2. Clean, fast, mobile-first library." />
+  <meta name="theme-color" content="#073b4c" />
+
+  <!-- GOOGLE SEARCH CONSOLE VERIFICATION TAG START -->
+  <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" />
+  <!-- GOOGLE SEARCH CONSOLE VERIFICATION TAG END -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: "#0a2a32",
+            navy: "#073b4c",
+            tealdeep: "#0e7c7b"
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="page-grain min-h-screen antialiased">
+
+  <!-- HEADER & LOGO START -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5">
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-navy text-white text-xl font-bold">L</span>
+        <span class="font-display text-2xl font-semibold text-slate-900">LernBücher</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="#featured" class="text-sm text-slate-600 hover:text-tealdeep hidden sm:block">Catalog</a>
+        <a href="#how-it-works" class="text-sm text-slate-600 hover:text-tealdeep hidden sm:block">How it works</a>
+        <!-- Admin Login Button Added Here Without Breaking Design -->
+        <button onclick="toggleAdminPanel()" class="rounded-full bg-slate-900 text-white px-4 py-2 text-xs font-semibold hover:bg-slate-800 transition">
+          ⚙️ Admin Login
+        </button>
+      </div>
+    </nav>
+  </header>
+  <!-- HEADER & LOGO END -->
+
+  <!-- HIDDEN ADMIN DASHBOARD MODAL PANEL -->
+  <div id="admin-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 my-8">
+      <div class="flex justify-between items-center mb-6 border-b pb-4">
+        <div>
+          <h3 class="text-xl font-bold text-slate-900">🛠️ Book Management Dashboard</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Add or remove books like WordPress CMS</p>
+        </div>
+        <button onclick="toggleAdminPanel()" class="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold hover:bg-slate-200">✕</button>
+      </div>
+
+      <!-- Password Prompt -->
+      <div id="admin-auth-box" class="space-y-4 py-4">
+        <p class="text-sm text-slate-600">Enter your password to access the upload dashboard. (Default password: <code class="bg-slate-100 px-2 py-1 rounded text-slate-900 font-bold">admin123</code>)</p>
+        <div class="flex gap-3">
+          <input type="password" id="admin-pwd-input" placeholder="Enter password..." class="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900" />
+          <button onclick="verifyAdmin()" class="bg-slate-900 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-slate-800">Unlock</button>
+        </div>
+        <p id="pwd-error" class="text-xs text-red-600 hidden font-semibold">Incorrect password! Try 'admin123'.</p>
+      </div>
+
+      <!-- Book Management Form -->
+      <div id="admin-form-box" class="hidden space-y-6">
+        <div class="flex flex-wrap gap-2 border-b pb-4">
+          <button onclick="setCat('deutsche')" id="btn-deutsche" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-navy text-white shadow-sm">🇩🇪 Deutsche Bücher</button>
+          <button onclick="setCat('nemetskie')" id="btn-nemetskie" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">🇷🇺 Немецкие книги</button>
+          <button onclick="setCat('libra')" id="btn-libra" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200">🇦🇱 Libra Gjermanisht</button>
+        </div>
+
+        <form id="quick-book-form" class="space-y-4">
+          <input type="hidden" id="selected-cat" value="deutsche" />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Book Title</label>
+              <input type="text" id="b-title" placeholder="e.g. Grammatik Aktiv" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">CEFR Level</label>
+              <select id="b-level" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:ring-2 focus:ring-slate-900 focus:outline-none">
+                <option value="A1">A1</option><option value="A2">A2</option><option value="B1" selected>B1</option><option value="B2">B2</option><option value="C1">C1</option><option value="C2">C2</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Cover Image URL</label>
+              <input type="url" id="b-cover" placeholder="https://..." required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase text-slate-600 mb-1">PDF Download Link</label>
+              <input type="url" id="b-link" placeholder="https://..." required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Description (2-3 lines)</label>
+            <textarea id="b-desc" rows="2" placeholder="Brief summary of the book..." required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-tealdeep text-white py-3 rounded-xl text-sm font-semibold hover:bg-teal-800 transition shadow-sm">Publish Book to Website</button>
+        </form>
+
+        <div class="mt-6 pt-4 border-t border-slate-200">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3">Manage Books in this Category:</h4>
+          <div id="admin-existing-list" class="space-y-2 max-h-48 overflow-y-auto text-sm pr-1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero-mesh relative overflow-hidden text-white">
+      <div class="absolute inset-0 opacity-30" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.08\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+      <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
+        <div class="grid items-center gap-12 lg:grid-cols-12">
+          <div class="lg:col-span-7">
+            <p class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs tracking-wide text-teal-50 backdrop-blur">
+              Multilingual · CEFR A1–C2 · Instant PDF access
+            </p>
+            <h1 class="mt-6 font-display text-4xl leading-[1.1] sm:text-5xl lg:text-6xl font-semibold">
+              Free German Learning Books &amp; Resources
+            </h1>
+            <p class="mt-5 max-w-xl text-base sm:text-lg text-teal-50/90 leading-relaxed">
+              A trusted shelf of course books, grammar workbooks, and exam packs — organised for German learners, Russian speakers, and Albanian speakers.
+            </p>
+            <form id="hero-search-form" class="mt-8 flex flex-col sm:flex-row gap-3 max-w-xl">
+              <label class="sr-only" for="hero-search">Explore the catalog</label>
+              <input id="hero-search" type="search" placeholder="Try “B1”, “грамматика”, or “A1”…"
+                class="flex-1 rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm text-white placeholder:text-teal-100/60 backdrop-blur focus:outline-none focus:ring-4 focus:ring-amber-300/30" />
+              <button type="submit" class="btn-download rounded-full px-6 py-3 text-sm font-semibold">
+                Search &amp; explore
+              </button>
+            </form>
+            <p class="mt-4 text-xs text-teal-100/80">No account. No paywall. Replace sample files with your licensed PDFs.</p>
+          </div>
+          <div class="lg:col-span-5 hidden md:block">
+            <div class="relative mx-auto h-[340px] w-[280px]">
+              <div class="absolute left-8 top-6 h-64 w-44 rotate-[-8deg] rounded-xl shadow-2xl" style="background:linear-gradient(160deg,#0e7c7b,#073b4c)"></div>
+              <div class="absolute left-16 top-0 h-72 w-48 rotate-[6deg] rounded-xl shadow-2xl" style="background:linear-gradient(160deg,#1d4e89,#0b3a4a)"></div>
+              <div class="absolute left-4 top-10 h-72 w-52 rounded-xl shadow-2xl overflow-hidden" style="background:linear-gradient(160deg,#b45309,#7c2d12)">
+                <div class="h-full p-5 flex flex-col justify-between text-white">
+                  <p class="text-[10px] tracking-[0.25em] uppercase text-white/70">Featured</p>
+                  <div>
+                    <p class="font-display text-2xl leading-tight">Stadtgespräche B1</p>
+                    <p class="mt-2 text-xs text-white/70">Everyday German, ready to download.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust strip -->
+    <section class="bg-navy">
+      <div id="stats" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+    </section>
+
+    <!-- Categories -->
+    <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20" aria-labelledby="categories-heading">
+      <div class="max-w-2xl">
+        <p class="text-xs font-semibold tracking-[0.22em] uppercase text-teal-800">Choose your shelf</p>
+        <h2 id="categories-heading" class="mt-3 font-display text-3xl sm:text-4xl text-slate-900">Three libraries. One standard of care.</h2>
+        <p class="mt-3 text-slate-600">Native category names so every learner lands in the right language from the first tap.</p>
+      </div>
+      <div id="category-cards" class="mt-10 grid gap-6 md:grid-cols-3"></div>
+    </section>
+
+    <!-- FEATURED BOOKS SECTION (Dynamic Grid Connected to Dashboard) -->
+    <section id="featured" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16" aria-labelledby="featured-heading">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+        <div>
+          <p class="text-xs font-semibold tracking-[0.22em] uppercase text-teal-800">Catalog</p>
+          <h2 id="featured-heading" class="mt-3 font-display text-3xl sm:text-4xl text-slate-900">Featured books</h2>
+          <p class="mt-2 text-slate-600 max-w-xl">Managed directly via Admin Dashboard.</p>
+        </div>
+        <p class="text-sm text-slate-500">Live catalog update enabled.</p>
+      </div>
+
+      <!-- Dynamic Book Grid -->
+      <div id="dynamic-book-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <!-- Loaded dynamically -->
+      </div>
+    </section>
+
+    <!-- How it works + video -->
+    <section id="how-it-works" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20" aria-labelledby="how-heading">
+      <div class="grid gap-10 lg:grid-cols-2 items-center rounded-3xl bg-white border border-slate-200 p-6 sm:p-10">
+        <div>
+          <p class="text-xs font-semibold tracking-[0.22em] uppercase text-teal-800">How to download</p>
+          <h2 id="how-heading" class="mt-3 font-display text-3xl text-slate-900">Three steps. No account required.</h2>
+          <ol class="mt-6 space-y-4 text-slate-600">
+            <li class="flex gap-3">
+              <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-50 text-sm font-semibold text-teal-800">1</span>
+              <span>Open a category — Deutsche Bücher, Немецкие книги, or Libra Gjermanisht — or search by title and CEFR level.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-50 text-sm font-semibold text-teal-800">2</span>
+              <span>Read the short description and confirm the level badge matches your class or exam target.</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-teal-50 text-sm font-semibold text-teal-800">3</span>
+              <span>Tap <strong>Download PDF</strong>. Your browser saves the file. On phones, check Downloads or Files.</span>
+            </li>
+          </ol>
+        </div>
+        <div class="relative overflow-hidden rounded-2xl bg-slate-900 aspect-video shadow-xl">
+          <iframe
+            class="absolute inset-0 h-full w-full"
+            src="https://www.youtube-nocookie.com/embed/jNQXAC9IVRw"
+            title="How to download German learning resources"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust / quality -->
+    <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-8">
+      <div class="rounded-3xl hero-mesh px-6 py-12 sm:px-12 text-white">
+        <div class="max-w-3xl">
+          <h2 class="font-display text-3xl sm:text-4xl">Built like a library, not a marketplace.</h2>
+          <p class="mt-4 text-teal-50/90 leading-relaxed">Clear levels, honest descriptions, and a visible copyright desk.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="about.html" class="rounded-full bg-white/10 px-5 py-2 text-sm hover:bg-white/20">About the project</a>
+            <a href="dmca.html" class="rounded-full bg-white text-navy px-5 py-2 text-sm font-medium">Copyright &amp; takedown</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script>window.PAGE_CONFIG = { root: "", page: "home" };</script>
+  <script src="js/books.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Admin Dashboard Logic Script with 10 Books per Category -->
+  <script>
+    const defaultBooks = {
+      deutsche: [
+        { id: 101, title: "Stadtgespräche B1", level: "B1", cover: "https://via.placeholder.com/200x300.png?text=Stadtgespraeche+B1", desc: "Everyday German course book for advanced learners, focusing on conversational skills.", link: "#" },
+        { id: 102, title: "Grammatik Aktiv A1-B1", level: "A1", cover: "https://via.placeholder.com/200x300.png?text=Grammatik+Aktiv", desc: "Comprehensive grammar training with clear explanations and practical exercises.", link: "#" },
+        { id: 103, title: "Fit fürs Zertifikat B2", level: "B2", cover: "https://via.placeholder.com/200x300.png?text=Fit+fuers+B2", desc: "Exam preparation book tailored specifically for the Goethe-Zertifikat B2.", link: "#" },
+        { id: 104, title: "Aspekte Neu C1", level: "C1", cover: "https://via.placeholder.com/200x300.png?text=Aspekte+Neu+C1", desc: "Advancedmittelstufe course book focusing on complex topics and professional German.", link: "#" },
+        { id: 105, title: "Sicher! B1+", level: "B1", cover: "https://via.placeholder.com/200x300.png?text=Sicher+B1", desc: "Targeted modules for building confidence in daily and academic communication.", link: "#" },
+        { id: 106, title: "Mensche A2.1", level: "A2", cover: "https://via.placeholder.com/200x300.png?text=Menschen+A2", desc: "Popular textbook series designed for elementary learners with engaging visuals.", link: "#" },
+        { id: 107, title: "Mit Erfolg zum Goethe-Zertifikat", level: "B2", cover: "https://via.placeholder.com/200x300.png?text=Mit+Erfolg+B2", desc: "Practice test volume with complete audio transcripts and answer keys.", link: "#" },
+        { id: 108, title: "Delfin Teil 1", level: "A1", cover: "https://via.placeholder.com/200x300.png?text=Delfin+A1", desc: "Foundational German course introducing basic sentence structures and vocabulary.", link: "#" },
+        { id: 109, title: "Prüfungstraining Start Deutsch", level: "A2", cover: "https://via.placeholder.com/200x300.png?text=Pruefungstraining", desc: "Focused exercises for reading, listening, writing, and speaking exams.", link: "#" },
+        { id: 110, title: "Wortschatz & Grammatik C2", level: "C2", cover: "https://via.placeholder.com/200x300.png?text=Wortschatz+C2", desc: "Mastering idioms, stylistic nuances, and high-level academic writing.", link: "#" }
+      ],
+      nemetskie: [
+        { id: 201, title: "Немецкая грамматика в таблицах", level: "A2", cover: "https://via.placeholder.com/200x300.png?text=Russian+Grammar+1", desc: "Complete German grammar manual explained clearly with Russian translation tables.", link: "#" },
+        { id: 202, title: "Разговорный немецкий за 30 дней", level: "A1", cover: "https://via.placeholder.com/200x300.png?text=Russian+Speaking", desc: "Fast-track conversational phrases and everyday dialogues for Russian speakers.", link: "#" },
+        { id: 203, title: "Немецкий язык: Шаг за шагом", level: "A1", cover: "https://via.placeholder.com/200x300.png?text=Step+By+Step+RU", desc: "Step-by-step introduction to German phonetics, verbs, and sentence building.", link: "#" },
+        { id: 204, title: "Практический курс немецкого B1", level: "B1", cover: "https://via.placeholder.com/200x300.png?text=Practical+B1+RU", desc: "Intermediate workbook with exercises translated for Russian students.", link: "#" },
+        { id: 205, title: "Немецкие сказки для чтения", level: "A2", cover: "https://via.placeholder.com/200x300.png?text=German+Tales+RU", desc: "Classic bilingual fairy tales to build reading fluency and natural vocabulary.", link: "#" },
+        { id: 206, title: "Деловой немецкий язык", level: "B2", cover: "https://via.placeholder.com/200x300.png?text=Business+German+RU", desc: "Business correspondence, interviews, and professional office vocabulary.", link: "#" },
+        { id: 207, title: "Словарь немецких глаголов", level: "B1", cover: "https://via.placeholder.com/200x300.png?text=Verbs+Dictionary+RU", desc: "Comprehensive list of irregular verbs with Russian translation and conjugation.", link: "#" },
+        { id: 208, title: "Готовимся к экзамену Zertifikat B1", level: "B1", cover: "https://via.placeholder.com/200x300.png?text=Exam+Prep+B1+RU", desc: "Exam strategies and sample test papers translated into Russian.", link: "#" },
+        { id: 209, title: "Немецкий с нуля до уверенного B1", level: "A2", cover: "https://via.placeholder.com/200x300.png?text=Zero+To+B1+RU", desc: "All-in-one comprehensive guide for self-taught learners.", link: "#" },
+        { id: 210, title: "Секреты немецкой орфографии", level: "B2", cover: "https://via.placeholder.com/200x300.png?text=Spelling+Secrets+RU", desc: "Advanced rules for punctuation, spelling, and sentence restructuring.", link: "#" }
+      ],
+      libra: [
+        { id: 301, title: "Gjermanisht A1 për Fillohet", level: "A1", cover: "https://via.placeholder.com/200x300.png?text=Albanian+A1", desc: "Baza e gjuhës gjermane për fillestarë me shpjegime të qarta në gjuhën shqipe.", link: "#" },
+        { id: 302, title: "Gramatika Gjermane në Shqip", level: "A2", cover: "https://via.placeholder.com/200x300.png?text=Albanian+Grammar", desc: "Rregullat gramatikore të gjuhës gjermane të shpjeguara hap pas hapi shqip.", link: "#" },
+        { id: 303, title: "Fjalor Gjermanisht-Shqip", level: "B1", cover: "https://via.placeholder.com/200x300.png?text=Dictionary+SQ", desc: "Mbi 5000 fjalë dhe shprehje të përditshme për nxënësit shqiptarë.", link: "#" },
+        { id: 304, title: "Biseda Gjermane në Jetën e Përditshme", level: "A2", cover: "https://via.placeholder.com/200x300.png?text=Daily+Conversations+SQ", desc: "Dialogje praktike për punë, udhëtime dhe jetë në vendet gjermanofolëse.", link: "#" },
+        { id: 305, title: "Gjermanisht B1 Përgatitje për Provim", level: "B1", cover: "https://via.placeholder.com/200x300.png?text=Exam+B1+SQ", desc: "Testet e provimit Goethe dhe ÖSD me udhëzime në gjuhën shqipe.", link: "#" },
+        { id: 306, title: "Shprehjet Idiomatike Gjermane", level: "B2", cover: "https://via.placeholder.com/200x300.png?text=Idioms+SQ", desc: "Kuptimi dhe përdorimi i shprehjeve popullore në gjermanisht.", link: "#" },
+        { id: 307, title: "Gjermanisht për Profesionistë Mjekësorë", level: "B2", cover: "https://via.placeholder.com/200x300.png?text=Medical+German+SQ", desc: "Fjalor dhe terminologji mjekësore për infermierë dhe mjekë nga Kosova e Shqipëria.", link: "#" },
+        { id: 308, title: "Tregime të Shkurtra për Lexim B1", level: "B1", cover: "https://via.placeholder.com/200x300.png?text=Short+Stories+SQ", desc: "Historira interesante me përkthim paralel për përmirësimin e leximit.", link: "#" },
+        { id: 309, title: "Faqet e Ushtrimeve A2", level: "A2", cover: "https://via.placeholder.com/200x300.png?text=Exercises+A2+SQ", desc: "Fletëore ushtrimesh për zgjerimin e fjalorit dhe strukturës së fjalisë.", link: "#" },
+        { id: 310, title: "Gjermanisht e Avancuar C1", level: "C1", cover: "https://via.placeholder.com/200x300.png?text=Advanced+C1+SQ", desc: "Materiale të avancuara për studime universitare dhe punë zyrtare.", link: "#" }
+      ]
+    };
+
+    function getStore() {
+      const data = localStorage.getItem('lernbooks_data');
+      return data ? JSON.parse(data) : defaultBooks;
+    }
+
+    function saveStore(data) {
+      localStorage.setItem('lernbooks_data', JSON.stringify(data));
+      renderBooks();
+    }
+
+    function renderBooks() {
+      const store = getStore();
+      const grid = document.getElementById('dynamic-book-grid');
+      let html = '';
+
+      for (const [cat, books] of Object.entries(store)) {
+        const catName = cat === 'deutsche' ? '🇩🇪 Deutsche Bücher' : cat === 'nemetskie' ? '🇷🇺 Немецкие книги' : '🇦🇱 Libra Gjermanisht';
+        books.forEach(b => {
+          html += `
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+              <div>
+                <img src="${b.cover}" alt="${b.title}" class="h-48 w-full object-cover rounded-xl mb-4 bg-slate-100" onerror="this.src='https://via.placeholder.com/200x300.png?text=Book+Cover'" />
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="rounded-full bg-teal-50 px-2 py-0.5 text-xs font-bold text-teal-800">${b.level}</span>
+                  <span class="text-[11px] text-slate-500 font-medium">${catName}</span>
+                </div>
+                <h3 class="font-display text-xl font-semibold text-slate-900 mb-1.5">${b.title}</h3>
+                <p class="text-sm text-slate-600 mb-4 line-clamp-3">${b.desc}</p>
+              </div>
+              <a href="${b.link}" target="_blank" class="btn-download rounded-xl w-full text-center px-4 py-2.5 text-sm font-semibold">Download PDF</a>
+            </div>
+          `;
+        });
+      }
+      grid.innerHTML = html || '<p class="text-slate-500 col-span-full text-center py-12">No books added yet.</p>';
+    }
+
+    let activeCat = 'deutsche';
+    function toggleAdminPanel() {
+      const modal = document.getElementById('admin-modal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden') && sessionStorage.getItem('isAdmin') === 'true') {
+        showAdminForm();
+      }
+    }
+
+    function verifyAdmin() {
+      const pwd = document.getElementById('admin-pwd-input').value;
+      if (pwd === 'admin123') {
+        sessionStorage.setItem('isAdmin', 'true');
+        showAdminForm();
+      } else {
+        document.getElementById('pwd-error').classList.remove('hidden');
+      }
+    }
+
+    function showAdminForm() {
+      document.getElementById('admin-auth-box').classList.add('hidden');
+      document.getElementById('admin-form-box').classList.remove('hidden');
+      loadAdminList();
+    }
+
+    function setCat(cat) {
+      activeCat = cat;
+      document.getElementById('selected-cat').value = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.className = "cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200";
+      });
+      document.getElementById(`btn-${cat}`).className = "cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-navy text-white shadow-sm";
+      loadAdminList();
+    }
+
+    document.getElementById('quick-book-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const store = getStore();
+      const newBook = {
+        id: Date.now(),
+        title: document.getElementById('b-title').value,
+        level: document.getElementById('b-level').value,
+        cover: document.getElementById('b-cover').value,
+        desc: document.getElementById('b-desc').value,
+        link: document.getElementById('b-link').value
+      };
+      store[activeCat].push(newBook);
+      saveStore(store);
+      document.getElementById('quick-book-form').reset();
+      document.getElementById('selected-cat').value = activeCat;
+      loadAdminList();
+      alert('Book published successfully!');
+    });
+
+    function loadAdminList() {
+      const store = getStore();
+      const list = document.getElementById('admin-existing-list');
+      const books = store[activeCat] || [];
+      if (books.length === 0) {
+        list.innerHTML = '<p class="text-slate-400 text-xs">No books in this category.</p>';
+        return;
+      }
+      list.innerHTML = books.map(b => `
+        <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+          <span class="font-semibold text-slate-800 text-xs">${b.title} (${b.level})</span>
+          <button onclick="removeBook(${b.id})" class="text-red-500 font-bold text-xs px-2 py-1 bg-white border rounded hover:bg-red-50">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    function removeBook(id) {
+      if (confirm('Delete this book?')) {
+        const store = getStore();
+        store[activeCat] = store[activeCat].filter(b => b.id !== id);
+        saveStore(store);
+        loadAdminList();
+      }
+    }
+
+    renderBooks();
+  </script>
+</body>
+</html>
